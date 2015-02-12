@@ -1,0 +1,101 @@
+GJapps
+========================================================
+author: Guillermo Jasso
+date: February 2015
+transition: rotate
+
+This is an app for the project one of Developing Data Products
+
+It is a simple game where the program chooses a random number between 1 and 100 and gives you hints to try to guess it
+
+
+Instructions
+========================================================
+
+In order to play thi game you must introduce a number in the box of the app
+
+This number is your guess of what i am thinking
+
+The number must be between 1 and 100
+
+The program runs mathematical ecuations to see if you number is higher, lower or you got it
+
+IF you dont get it right, It will give you hints so you can continue guessing until you get it!
+
+Thanks for playing! have fun!
+
+
+Code page 1
+========================================================
+<small>
+```{r}
+library(shiny)
+shinyUI( pageWithSidebar(
+             headerPanel("Lets play! what number i am thinking of!?!?"),
+                sidebarPanel(
+                textInput('guess', 'Number', value = ""),
+                h5('And now press \'Go!\' you just need it the first time!'),     
+                actionButton("goButton", "Go!")
+        ), 
+        mainPanel(
+                h2('Try to guess a number between 1 and 100'),
+                h5('I will think in a number and your task is to try to guess what i am thinking!'),
+                h3('Results of guess'),
+                h4('Your number'),
+                verbatimTextOutput("inputValue"),
+                h4('Which is...'),
+                verbatimTextOutput("outputValue"),
+                h5('To play again close the app and reload.'),
+                h5('thank you for playing')
+        )
+)
+)
+```
+.</small>
+
+Code page 2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+========================================================
+<small>
+```{r}
+library(shiny)
+number <- floor(runif(1,1,101))
+numberGuessed <- function(guess, number) {
+        returnValue <- "Nothing entered yet."
+        if (guess > 100) {
+                returnValue <- 'Above 100.\nPlease make a selection between 1 and 100.'
+        }
+        else if (guess < 1) {
+           returnValue <- 'Below 1.\nPlease make a selection between 1 and 100.'
+        }
+        else if (guess > number) {
+                returnValue <- 'Higher than the number.'
+        }
+        else if (guess < number) {
+                returnValue <- 'Lower than the number.'
+        }
+        else if (guess == number) {
+                returnValue <- 'Correct!'
+        }
+        returnValue
+}
+shinyServer( 
+        function(input, output) {
+                output$inputValue <- renderPrint({as.numeric(input$guess)})
+                                output$outputValue <- renderText({
+                        if (input$goButton == 0) "You have not guessed a number yet"
+                        else if (input$goButton >= 1) numberGuessed(as.numeric(input$guess), number)
+                })
+        }
+)
+```
+.</small>
+
+App view and link
+========================================================
+
+This is how the app looks like.
+![alt text](one.png)
+To play with the app visit the following link
+[My_App_GJ](https://geman1.shinyapps.io/GJappx/)
+
+The code is located at [Github_Repo](https://github.com/geman1/Developing-data-products-GJ/tree/master )
